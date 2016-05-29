@@ -1,19 +1,19 @@
 <!-- 
-    Author: Samantha Voigt
+		Author: Samantha Voigt
 -->
 
 <!doctype html>
 <HTML lang="en">
 <head>
-    <meta charset="utf8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="An anonymous question-asking resource for the Wellesley College SHEs.">
-    <meta name="author" content="Samantha Voigt">
-    <!-- <link rel="icon" href=""> -->
+		<meta charset="utf8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<meta name="description" content="An anonymous question-asking resource for the Wellesley College SHEs.">
+		<meta name="author" content="Samantha Voigt">
+		<!-- <link rel="icon" href=""> -->
 
-    <title>SHE-nonymous - Answer</title>
+		<title>SHE-nonymous - Answer</title>
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -27,37 +27,92 @@
 <body>
 
 	<nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">SHE-nonymous</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="submit">Submit Question</a></li>
-            <li><a href="about">About the SHEs</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href='answer'>Answer Questions</a></li>
-            <li><a href={profileLink}>Profile</a></li>
-            <li><a href='index.cgi?logout=True'>Log Out</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/">SHE-nonymous</a>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="/">Home</a></li>
+						<li><a href="submit">Submit Question</a></li>
+						<li><a href="about">About the SHEs</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li class="active"><a href='answer'>Answer Questions</a></li>
+						<li><a href={profileLink}>Profile</a></li>
+						<li><a href='index.cgi?logout=True'>Log Out</a></li>
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div>
+		</nav>
 
-    <div class="container" id="content"> 
+		<div class="container" id="content"> 
 
-		<form method=post action="answerQuestions.cgi">
-			<!-- {formContent} -->
+			<div class="messages">
+				{% if error %}
+					<div class='signin-alert alert alert-error' role='alert'>{{ error }}</div>
+				{% endif %}
+
+				{% if loggedout %}
+					<div class='signin-alert alert alert-error' role='alert'>{{ loggedout }}</div>
+				{% endif %}
+
+				{% if success %}
+					<div class='signin-alert alert alert-success' role='alert'>{{ success }}</div>
+				{% endif %}
+
+				{% if warning %}
+					<div class='signin-alert alert alert-warning' role='alert'>{{ warning }}</div>
+				{% endif %}
+
+				{% if info %}
+					<div class='signin-alert alert alert-info' role='alert'>{{ info }}</div>
+				{% endif %}
+			</div>
+
+		<form method=post action="/answer">
+			
+			{% if questions %}
+				<fieldset class='list-group form-group'>
+					{% for q in questions %}
+						<div class='list-group-item'>
+							<span class='question'>{{q['question']}}</span>
+							<p>Status: {{q["status"]}}
+							<p>Time submitted: {{q["ts"]}}
+							<br>
+							<p>In progress answer: <i>{{q["answer"]}}</i>
+							<br>
+							<button class='btn btn-primary' name="q_selection" value={{q["id"]}} type="submit">Answer Question</button>
+						</div>
+					{% endfor %}
+				</fieldset>
+			{% endif %}
+
+
+			{% if selection %}
+				<fieldset class='form-group'>
+					<p class='question'>{{selection["question"]}}</p>
+					<br><br>
+					<input type=text name='id' value={{selection["id"]}} style='display:none'>
+					<label for='answer'>Answer:</label>
+					<br>
+					<textarea class='form-control' name='answer' cols='40' rows='10'>{{selection["answer"]}}</textarea>
+					<br>
+				</fieldset>
+				<div class='btn-group' role='group'>
+					<input class='btn btn-primary' type='submit' name='save' value='Save'>
+					<input class='btn btn-primary' type='submit' name='publish' value='Publish'>
+				</div>
+			{% endif %}
+
 		</form>
-    </div>
+		</div>
 
 	<!-- jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
