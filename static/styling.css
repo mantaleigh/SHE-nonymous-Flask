@@ -1,0 +1,27 @@
+/*
+	Author: Samantha Voigt
+
+	Provides all of the styling for the SHE-nonymous pages
+*/
+
+
+body { 
+	padding-top: 50px;
+}
+
+#content { 
+  padding-top: 25px;
+}
+
+.timestamp { 
+	font-style: italic;
+}
+
+.question { 
+	font-weight: bold;
+	font-size: 120%;
+}
+
+.timestamp { 
+	font-size: 75%;
+}
